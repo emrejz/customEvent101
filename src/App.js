@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import { on, remove } from "./events";
 
+const counterButtonId = "counterButton";
+
 const App = () => {
   const [countWithCustomEvent, setCountWithCustomEvent] = useState(0);
   const [countWithoutCustomEvent, setCountWithoutCustomEvent] = useState(0);
 
-  const handleCustomEventValue = ({ detail }) => setCountWithCustomEvent(detail);
-  const handleGlobalVariable = () => setCountWithoutCustomEvent(window.count);
+  const handleCustomEventValue = ({ detail }) =>
+    setCountWithCustomEvent(detail);
+  const handleGlobalVariable = (e) => {
+    if (e.target.id === counterButtonId) {
+      setCountWithoutCustomEvent(window.count);
+    }
+  };
 
   useEffect(() => {
     // custom event
