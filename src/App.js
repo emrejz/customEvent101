@@ -2,15 +2,32 @@ import { useEffect, useState } from "react";
 import { on, remove } from "./events";
 
 const App = () => {
-  const [counter, setCounter] = useState(0);
+  const [countWithCustomEvent, setCountWithCustomEvent] = useState(0);
+  const [countWithoutCustomEvent, setCountWithoutCustomEvent] = useState(0);
+
+  const handleCustomEventValue = ({ detail }) => setCountWithCustomEvent(detail);
+  const handleGlobalVariable = () => setCountWithoutCustomEvent(window.count);
 
   useEffect(() => {
-    on("counterInc", ({ detail }) => setCounter(detail));
+    // custom event
+    on("counterCustomEvent", handleCustomEventValue);
+    // exists event
+    on("click", handleGlobalVariable);
 
-    return () => remove("counterInc", ({ detail }) => setCounter(detail));
+    return () => {
+      remove("counterCustomEvent", handleCustomEventValue);
+      remove("click", handleGlobalVariable);
+    };
   }, []);
 
-  return <h1>{counter}</h1>;
+  return (
+    <>
+      <h1>Count by custom event: {countWithCustomEvent}</h1>
+      <h1>
+        Count by global variable and exist event: {countWithoutCustomEvent}
+      </h1>
+    </>
+  );
 };
 
 export default App;
